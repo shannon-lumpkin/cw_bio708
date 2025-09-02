@@ -136,7 +136,7 @@ iris %>%
 # use multiple layers 
 iris %>%
   ggplot(aes(y = Sepal.Length,
-             x = Sepcies,
+             x = Species,
              fill = Species)) +
   geom_boxplot() +
   geom_point()
