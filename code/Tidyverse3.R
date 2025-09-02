@@ -9,3 +9,149 @@ iris_sub <- as_tibble(iris) %>%
   ungroup()
 
 print(iris_sub)
+
+# refresher ---------------------------------------------------------------
+
+# exercise 1
+# filter iris_sub to those with Sepal.Length greater than 5
+# assign to 'df_g5'
+
+df_g5 <- filter(iris_sub,
+                Sepal.Length >5)
+
+# exercise 2
+# select columns of Sepal.Length and Petal.width from iris_sub
+# assign to 'df_sp'
+
+df_sp <- iris_sub %>%
+  select(c(Sepal.Length, Petal.Width))
+
+# exercise 3
+# arrange rows by Petal.width in iris_sub
+# asssign to 'df_arrange'
+
+df_arange <- iris_sub %>%
+  arrange(Petal.Width)
+
+# exercise 4
+# do exercise 1-3 at once with pipes
+# assign to 'df_master'
+
+df_master <- iris_sub %>% 
+  filter(Sepal.Length > 5) %>%
+  select (c(Sepal.Length, Petal.Width)) %>%
+  arrange(Petal.Width)
+
+# extra
+# calculate mean Patel.Width for each Species separately
+# use group_by() and summarize() functions
+
+df_means <- iris_sub %>%
+  group_by(Species) %>%
+  summarize (mean_pw = mean(Petal.Width))
+
+
+
+
+
+# ggplot ------------------------------------------------------------------
+
+# basic syntax
+## without pipe
+
+(g_eaxample <- ggplot(data = iris, 
+       mapping = aes(x = Sepal.Length,
+                     y = Sepal.Width)) +
+  geom_point())
+
+# with pipe
+
+g_example <- iris %>%
+  ggplot(mapping = aes(x = Sepal.Length,
+                       y = Speal.Width)) +
+    geom_point()
+
+# color
+iris %>%
+  ggplot(mapping = aes(x = Sepal.Length,
+                       y = Sepal.Width,
+                       color = Species)) +
+  geom_point()
+
+# pitfall, when you color points or anything (incorrect)
+iris %>%
+  ggplot(mapping = aes(x = Sepal.Length,
+                       y= Sepal.Width),
+         color = Species) +
+  geom_point()
+
+g_scol <- iris %>%
+  ggplot(mapping = aes(x = Sepal.Length,
+                      y= Sepal.Width,)) +
+  geom_point(color = "salmon")
+ 
+
+
+# line plot
+
+df0 <- tibble(x = rep(1:50, 3),
+              y = x * 2)
+
+df0 %>%
+  ggplot(aes(x = x,
+             y = y)) + 
+  geom_line()
+
+# histogram
+iris %>%
+  ggplot(aes(x = Sepal.Length)) +
+  geom_histogram()
+
+# histogram colored by species
+iris%>% 
+  ggplot(aes(x= Sepal.Length,
+             color = Species)) +
+  geom_histogram()
+
+# histogram filled by color
+iris%>% 
+  ggplot(aes(x= Sepal.Length,
+             fill = Species)) +
+  geom_histogram()
+
+# boxplot
+iris %>% 
+  ggplot(aes(x = Species,
+             y = Sepal.Length)) +
+  geom_boxplot()
+
+# boxplot filled by species
+
+iris %>% 
+  ggplot(aes(x = Species,
+             y = Sepal.Length,
+             fill = Species)) +
+  geom_boxplot()
+
+# use multiple layers 
+iris %>%
+  ggplot(aes(y = Sepal.Length,
+             x = Sepcies,
+             fill = Species)) +
+  geom_boxplot() +
+  geom_point()
+
+iris %>% 
+  ggplot(aes(x = Species,
+             y = Sepal.Length,
+             fill = Species)) +
+  geom_boxplot() +
+  geom_point()
+
+iris %>% 
+  ggplot(aes(x = Species,
+             y = Sepal.Length,
+             fill = Species)) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.25) 
+
