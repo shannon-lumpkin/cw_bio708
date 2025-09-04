@@ -4,29 +4,46 @@
 # base R ------------------------------------------------------------------
 
 # 1: Create a vector with three elements. Assign it to `v_three`.
+v_three<-(c(3,6,9))
 
 # 2: Create a vector containing 20 "a", 30 "b", and 50 "c" (total length = 100).  
 # Assign it to `v_abc100`.
+v_abc100<- (c(a, times=20, b,times = 30, c, times=50, length=100)
+            
 
 # 3: The script below creates a vector `v_x` with 100 random numbers from a normal distribution.  
 # Select only the positive numbers (> 0) from `v_x`, calculate their mean, and assign it to `mu_x_plus`.
 set.seed(100)
-v_x <- rnorm(100)
+
+
+mu_x_plus<- v_x%>% mean( >0)
+
 
 # 4: Create a numeric matrix with the numbers 1 through 9 arranged in 3 rows × 3 columns.  
 # Assign it to `m_num`.
 
+m_num<- matrix(c(1:9), nrow=3, ncol=3, byrow=TRUE)
+
+
 # 5: Create a base R data frame (`data.frame()` function) using `v_x` and `v_abc100`.  
 # Name the columns `"x"` for `v_x` and `"group"` for `v_abc`, and assign it to `df_sample`.
+df_sample<- data_frame%>%
 
-
+  
+  
 # tidyverse ---------------------------------------------------------------
 
 # 6: Load the `tidyverse` package.
 
-# 7: The `mtcars` dataset is a built-in base R data frame.  
+library (tidyverse)
+
+# 7: The `mtcars` dataset is a built-in base R data frame. 
 # Convert it to a tibble using `as_tibble()` and assign it to `df_mtcars`.  
 # Use `?as_tibble()` to read the documentation before doing so.
+as_tibble(mtcars)
+
+df_mtcars<-as_tibble(mtcars)%>%
+
 
 # 8: `mtcars` has the following columns:
 #
@@ -45,21 +62,31 @@ v_x <- rnorm(100)
 # Display the column names of `df_mtcars` using `colnames()`.  
 # Do NOT assign the result to a new object.
 
+colnames (df_mtcars)
+
+
 # 9: Extract the row names of the `mtcars` dataset using `rownames()`.  
 # Assign the result to `v_make`.
+v_make<- rownames(mtcars)
 
 # 10: Add `v_make` as a new column to `df_mtcars` and name the column `"make"`.
+make<- df_mtcars%>% mutate(v_make)
+
+
 
 # 11: Filter `df_mtcars` to include only rows where:  
 # - `mpg` is less than 20 AND  
 # - `disp` is greater than 200  
 # Assign the result to `df_subset`.
+df_subset<- df_mtcars%>% filter(mpg<20, disp>200)
+
 
 # 12: Count how many car makes meet the above conditions (Q11).
 # Apply `nrow()` to `df_subset`.
+nrow(df_subset)
 
 # 13: Repeat Q11 and Q12 in a single pipeline (with %>%), and assign the result to `n_make`.
-
+df_subset<- df_mtcars%>% filter(mpg<20, disp>200)%>% nrow(df_subset)
 # 14: Convert the `cyl` column from numeric to factor using `factor()`.  
 # Add it to `df_mtcars` as a new column named `f_cyl` using `mutate()` function.
 
@@ -81,16 +108,14 @@ v_l <- runif(150, 60, 150)
 v_w <- rnorm(n = length(v_l),
              mean = 0.1 * v_l^1.5,
              sd = 10)
+v_sp<-  sample(c("bhc", "rbs", "gsf"),
+               size = length(v_l),
+               replace = TRUE))
 
 df_length <- tibble(length = v_l,
-                    sp_code = sample(c("bhc", "rbs", "gsf"),
-                                     size = length(v_l),
-                                     replace = TRUE))
-
+                    sp_code =v_sp)
 df_weight <- tibble(weight = v_w,
-                    sp_code = sample(c("bhc", "rbs", "gsf"),
-                                     size = length(v_l),
-                                     replace = TRUE))
-
+                    sp_code = v_sp
+                    
 # 20: Draw a scatter plot (point plot) of `length` vs. `weight` from `df_fish`,  
 # coloring the points by species code (`sp_code`).
