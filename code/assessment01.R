@@ -4,20 +4,18 @@
 # base R ------------------------------------------------------------------
 
 # 1: Create a vector with three elements. Assign it to `v_three`.
-v_three<-(c(3,6,9))
+v_three<-c(3,6,9)
 
 # 2: Create a vector containing 20 "a", 30 "b", and 50 "c" (total length = 100).  
 # Assign it to `v_abc100`.
-v_abc100<- (c(a, times=20, b,times = 30, c, times=50, length=100)
-            
+v_abc<- c(rep("a", 20), rep("b", 30), rep("c", 50))
 
 # 3: The script below creates a vector `v_x` with 100 random numbers from a normal distribution.  
 # Select only the positive numbers (> 0) from `v_x`, calculate their mean, and assign it to `mu_x_plus`.
 set.seed(100)
+v_x<-mean(v_x[v_x>0])
 
-
-mu_x_plus<- v_x%>% mean( >0)
-
+mu_x_plus<- mean(v_x[v_x>0])
 
 # 4: Create a numeric matrix with the numbers 1 through 9 arranged in 3 rows × 3 columns.  
 # Assign it to `m_num`.
@@ -27,22 +25,19 @@ m_num<- matrix(c(1:9), nrow=3, ncol=3, byrow=TRUE)
 
 # 5: Create a base R data frame (`data.frame()` function) using `v_x` and `v_abc100`.  
 # Name the columns `"x"` for `v_x` and `"group"` for `v_abc`, and assign it to `df_sample`.
-df_sample<- data_frame%>%
+df_sample<- data_frame(x=v_x, group = v_abc100, stringsAsFactors = FALSE)
+  
 
-  
-  
 # tidyverse ---------------------------------------------------------------
 
 # 6: Load the `tidyverse` package.
-
 library (tidyverse)
 
 # 7: The `mtcars` dataset is a built-in base R data frame. 
 # Convert it to a tibble using `as_tibble()` and assign it to `df_mtcars`.  
 # Use `?as_tibble()` to read the documentation before doing so.
-as_tibble(mtcars)
 
-df_mtcars<-as_tibble(mtcars)%>%
+df_mtcars<-as_tibble(mtcars)
 
 
 # 8: `mtcars` has the following columns:
@@ -89,14 +84,29 @@ nrow(df_subset)
 df_subset<- df_mtcars%>% filter(mpg<20, disp>200)%>% nrow(df_subset)
 # 14: Convert the `cyl` column from numeric to factor using `factor()`.  
 # Add it to `df_mtcars` as a new column named `f_cyl` using `mutate()` function.
+df_mtcars<- df_mtcars%>% mutate(f_cyl=factor(cyl))
 
 # 15: Draw a box plot showing car weight (`wt`) for each number of cylinders (`f_cyl`).
+ggplot(df_mtcars, aes (x=f_cyl, y=wt)) +
+  geom_boxplot()+
+  labs(x="Cylinders (factor)", y="Weight (1000lbs)", title = "Car Weight by Cylinder Count")
 
 # 16: Calculate the average car weight (`wt`) separately for each number of cylinders (`cyl`).
+df_mtcars %>%
+  group_by (cyl) %>%
+  summarize(mean_wt = mean(wt), .groups = "drop")
 
 # 17: Identify the heaviest car make (`wt`) among cars with 6 cylinders (`cyl`).
+heaviest_cy16_make <- df_mtcars %>%
+  filter(cyl == 6)%>%
+  slice_max(order_by = wt, n=1, with_ties = FALSE)%>%
+  pull(make)
+heaviest_cyl6_make
 
 # 18: Create a histogram showing the distribution of 1/4 mile time (`qsec`).
+ggplot(df_mtcars, aes(x=qsec))+
+  geom_histogram(binwidth=1)+
+  labs(x="Quarter-mile time (sec)", y="Count", title = "Distribution of qsec")
 
 # 19: The following script creates two tibbles:  
 # `df_length` (body length) and `df_weight` (body weight),  
