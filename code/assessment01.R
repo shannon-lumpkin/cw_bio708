@@ -25,8 +25,7 @@ m_num<- matrix(c(1:9), nrow=3, ncol=3, byrow=TRUE)
 
 # 5: Create a base R data frame (`data.frame()` function) using `v_x` and `v_abc100`.  
 # Name the columns `"x"` for `v_x` and `"group"` for `v_abc`, and assign it to `df_sample`.
-df_sample<- data_frame(x=v_x, group = v_abc100, stringsAsFactors = FALSE)
-  
+df_sample<- data_frame(x=v_x, group = v_abc100)
 
 # tidyverse ---------------------------------------------------------------
 
@@ -57,7 +56,7 @@ df_mtcars<-as_tibble(mtcars)
 # Display the column names of `df_mtcars` using `colnames()`.  
 # Do NOT assign the result to a new object.
 
-colnames (df_mtcars)
+colnames(df_mtcars)
 
 
 # 9: Extract the row names of the `mtcars` dataset using `rownames()`.  
@@ -65,8 +64,7 @@ colnames (df_mtcars)
 v_make<- rownames(mtcars)
 
 # 10: Add `v_make` as a new column to `df_mtcars` and name the column `"make"`.
-make<- df_mtcars%>% mutate(v_make)
-
+df_mtcars<-mutate(df_mtcars, make = v_make)
 
 
 # 11: Filter `df_mtcars` to include only rows where:  
@@ -120,7 +118,7 @@ v_w <- rnorm(n = length(v_l),
              sd = 10)
 v_sp<-  sample(c("bhc", "rbs", "gsf"),
                size = length(v_l),
-               replace = TRUE))
+               replace = TRUE)
 
 df_length <- tibble(length = v_l,
                     sp_code =v_sp)
