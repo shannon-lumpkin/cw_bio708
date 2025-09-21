@@ -124,5 +124,7 @@ g_var_ub <- df_sample %>%
 
 g_mu / g_var / g_var_ub
 
+library(tidyverse)
+library(patchwork) 
 
 
