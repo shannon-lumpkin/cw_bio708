@@ -24,10 +24,20 @@ head(CO2)
 # CO2 dataframe is a base dataframe. Convert this to a class `tibble`
 # then assign to `df_co2`
 
+pacman::p_load(tidyverse, 
+               patchwork,
+               here)
+
+
+library(tibble)
+df_co2 <- as_tibble(CO2)
+class(df_co2)
 
 # Q2
 # Convert column names to lowercase and reassign to `df_co2`
 
+df_co2 <- janitor::clean_names(df_co2)
+names(df_co2)
 
 # Q3
 # Create scatter plots of CO₂ uptake versus ambient CO₂ concentration using `df_co2`.
@@ -35,6 +45,23 @@ head(CO2)
 # - The y-axis should represent CO₂ assimilation rate
 # - Color the points by treatment.
 # - Create separate panels for each plant type (Quebec vs Mississippi) and combine the plots.
+
+ptype1 <- df_co2 %>% 
+  filter(type == "Quebec") %>% 
+  ggplot(aes(x = conc,
+             y = uptake,
+             color = treatment)) +
+  geom_point()
+
+ptype2 <- df_co2 %>% 
+  filter(type == "Mississippi") %>% 
+  ggplot(aes(x = conc,
+             y = uptake,
+             color = treatment)) +
+  geom_point()
+
+library(patchwork)
+ptype1/ ptype2
 
 
 # Q4
@@ -52,6 +79,17 @@ head(CO2)
 # 
 # Fit these models separately for each plant origin.
 
+mod_quebec <- df_co2 %>%
+  filter(type == "Quebec") %>%
+  lm(uptake ~ conc * treatment, data = .)
+
+summary(mod_quebec)
+
+mod_mississippi <- df_co2 %>%
+  filter(type == "Mississippi") %>%
+  lm(uptake ~ conc * treatment, data = .)
+
+summary(mod_mississippi)
 
 # Q5
 # Based on the models fitted in Q4 for Quebec and Mississippi plants,
@@ -129,12 +167,20 @@ df_env <- BCI.env %>%
 # Q6
 # Convert column names of `df_env` to lowercase and reassign to `df_env`
 
+df_env <- janitor::clean_names(df_env)
+
+df_env
 
 # Q7
 # In `df_env`, some environmental variables have no variation between plots
 # (i.e., the same value for all plots). Identify these columns and remove them
 # from the dataframe. Assign the resulting dataframe to `df_env_sub`.
 
+no_var_cols <- sapply(df_env, n_distinct) 
+df_env_sub <- df_env %>% 
+  select(all_of(names(no_var_cols)[which(no_var_cols > 1)]))
+
+summary(no_var_cols)
 
 # Q8
 # Calculate summary statistics for each plot using `df_bci`.
@@ -144,10 +190,20 @@ df_env <- BCI.env %>%
 # - p: proportion of the most abundant species (n1 / n_sum)
 # Assign the resulting dataframe to `df_n`.
 
+df_n <- df_bci %>% 
+  group_by(plot) %>% 
+  summarize(n_sum = sum(count),
+            n1 = max(count),
+            p = n1 / n_sum)
 
 # Q9
 # Combine the summary data (`df_n`) with the environmental variables
 # (`df_env_sub`) for each plot. Assign the resulting dataframe to `df_m`.
+
+df_m <- df_n %>% 
+  left_join(df_env_sub,
+            by = "plot")
+head(df_m)
 
 
 # Q10
@@ -157,4 +213,11 @@ df_env <- BCI.env %>%
 # Use model selection based on predictability (i.e., out-of-sample prediction) 
 # rather than the goodness of fit, and report which variables are included in 
 # the best predictive model as a comment.
+
+df_mod <- glm(cbind(n1, n_sum - n1) ~ env_het + stream + habitat, df_m,
+              family = "binomial") 
+
+print(df_mod)
+
+
 
